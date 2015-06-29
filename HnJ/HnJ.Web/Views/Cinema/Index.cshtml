@@ -1,0 +1,66 @@
+﻿@model List<HnJ.Helper.Models.Cinema>
+@{
+    ViewBag.Title = "Cinemas";
+}
+<hr />
+<h2>Cinemas</h2>
+
+@if (User.IsInRole("Admin"))
+{
+    <a href='@Url.Action("Manage")'>
+        <button type="button" class="btn btn-primary btn-default">
+            <span class="glyphicon glyphicon-plus"></span> Add
+        </button>
+    </a>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning" role="alert" style="margin-top:10px;">
+        Empty.
+    </div>
+}
+else
+{
+    <table class="table table-bordered" style="width:100%; margin-top:10px;">
+
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Amenities</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th></th>
+            }
+
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Address</td>
+
+                <td>
+                    @foreach (var amenity in item.CinemaAmenities.Value)
+                    {
+                        <label style="margin-right:10px;">@amenity.Amenity.Value.Name</label>
+                    }
+                </td>
+                @if (User.IsInRole("Admin"))
+                    {
+                    <td style="text-align:right">
+
+
+                        @Html.ActionLink(" ", "Manage", new { @id = item.Id }, new { @class = "btn btn-success glyphicon glyphicon-pencil" })
+
+                        @Html.ActionLink(" ", "Delete", new { @id = item.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash", @onclick = "return confirm('Are you sure you want to delete this cinema?');" })
+                       
+                    </td>
+                    }
+                </tr>
+        }
+
+            </table>
+}

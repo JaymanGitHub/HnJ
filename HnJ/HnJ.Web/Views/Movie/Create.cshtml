@@ -1,0 +1,94 @@
+﻿@model HnJ.Helper.Models.Movie
+
+@{
+    ViewBag.Title = ViewBag.Mode + " Movie";
+
+    if (Model.Id == Guid.Empty)
+    {
+        Model.ReleaseDate = DateTime.Now;
+    }
+}
+
+<br />
+
+
+
+@using (Html.BeginForm("Create", "Movie", FormMethod.Post, new { enctype = "multipart/form-data", @class = "container form-horizontal", role = "form", @style = "width: 650px; margin-left: auto; margin-right: auto; padding: 30px; background-color: #4C4C4C; height: 900px;" }))
+{
+    <div style="margin-left:-15px; margin-right: -15px; margin-bottom:10px;">
+        <a href="@Url.Action("Index")" style="float:left;">
+            <button type="button" class="btn btn-primary">
+                <span class="glyphicon glyphicon-chevron-left"></span> back
+            </button>
+        </a>
+    </div>
+
+    <br /><br /><br />
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Title)
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-control", @placeholder = "Title" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Actors)
+        @Html.TextBoxFor(m => m.Actors, new { @class = "form-control", @placeholder = "Actors" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Directors)
+        @Html.TextBoxFor(m => m.Directors, new { @class = "form-control", @placeholder = "Directors" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ReleaseDate)
+        @Html.TextBox("ReleaseDate", Model.ReleaseDate.ToString("MM/dd/yyyy"), new { @id = "datepicker", @class = "datepicker form-control", @placeholder = "mm/dd/yyyy" })
+    </div>
+
+    <div class="form-group">
+        @if (Convert.ToBoolean(ViewBag.IsEditMode))
+        {
+            <div class="col-lg-3 col-md-4 col-xs-6 thumb" style="float:left; margin-left: -15px; width: 300px; height: 300px;">
+                <div class="thumbnail">
+                    <img class="img-responsive" style="height: 300px;width: 100%;" src="~/Content/Posters/@Model.PosterName" alt="">
+                </div>
+            </div>
+        }
+
+        <div class="col-lg-3">
+            @Html.Label("Poster")
+            <input type="file" name="poster" />
+        </div>
+    </div>
+
+    if (Convert.ToBoolean(ViewBag.IsEditMode))
+    {
+        <div class="form-group">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        @Html.ActionLink("Mange Genres", "ManageGenres", new { @id = Model.Id })
+                    </h3>
+                </div>
+                <div class="panel-body" style="background-color: #4C4C4C;">
+                    @foreach (var amenity in HnJ.Helper.Genres.GetByMovieId(Model.Id))
+                    {
+                        @Html.Label(amenity.Name, new { @style = "margin-right:10px;" })
+                    }
+                </div>
+            </div>
+        </div>
+
+        @Html.HiddenFor(i => i.Id, new { @Value = Model.Id, @disabled = "disabled" })
+    }
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-success" />
+    </div>
+}
+
+<script>
+    $('.datepicker').datepicker({
+        dateFormat: 'mm/dd/yy'
+    });
+</script>

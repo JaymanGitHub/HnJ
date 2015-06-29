@@ -1,0 +1,47 @@
+﻿@model HnJ.Helper.Models.Amenity
+@{
+    ViewBag.Title = ViewBag.Mode + " Amenities";
+}
+
+<style>
+    .masthead {
+        position: fixed;
+        top: 0;
+    }
+
+    .mastfoot {
+        position: fixed;
+        bottom: 0;
+    }
+</style>
+<hr/>
+<h2 style="margin-left:-15px;">@ViewBag.Mode</h2>
+
+<br />
+
+<div style="margin-left:-15px; margin-right: -15px; margin-bottom:10px;">
+    <a href="@Url.Action("Index")" style="float:left;">
+        <button type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-chevron-left"></span> back
+        </button>
+    </a>
+</div>
+
+<br /><br /><br />
+
+@using (Html.BeginForm("Manage", "Amenity", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name)
+        @Html.TextBoxFor(m => m.Name, new { @class = "form-control", @placeholder = "Name" })
+    </div>
+
+    if (Convert.ToBoolean(ViewBag.IsEditMode))
+    {
+        @Html.HiddenFor(i => i.Id, new { @Value = Model.Id, @disabled = "disabled" })
+    }
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-lg btn-default" />
+    </div>
+}

@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "Register";
+}
+
+<style>
+    .masthead {
+        position: fixed;
+        top: 0;
+    }
+
+    .mastfoot {
+        position: fixed;
+        bottom: 0;
+    }
+</style>
+
+<div class="container body-content" style="width: 500px;">
+    <h2>Register</h2>
+    <div class="content-wrapper">
+        <div id="register-section" class="box-wrapper register-box-wrapper" style="background-color: #4C4C4C; height: 260px; padding: 15px;">
+            <div class="register-box">
+
+                <span class="label label-danger">@TempData["unknownError"]</span>
+                <span class="label label-danger">@TempData["emailExistError"]</span>
+                <span class="label label-danger">@TempData["passwordError"]</span>
+
+                @using (Ajax.BeginForm("DoRegister", new AjaxOptions { }))
+                {
+                    <div class="form-group">
+                        <input style="width: 215px; float: left; margin-right: 10px;" type="text" class="form-control" name="firstName" id="firstName" placeholder="First Name" required>
+                        <input style="width: 215px;" type="text" class="form-control" name="lastName" id="lastName" placeholder="Last Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                    </div>
+
+                    <button id="btn-register" type="submit" class="btn btn-success pull-right">Register Me</button>
+                }
+                <a href="~/Account/Login" class="btn btn-danger pull-left">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>

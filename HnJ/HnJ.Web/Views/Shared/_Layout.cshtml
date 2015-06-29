@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - HnJ Cinemas</title>
+    @*<link href="~/Content/Site.css" rel="stylesheet" type="text/css" />*@
+
+    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />*@
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+
+    <link href="~/Content/cover.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/Content/jquery-ui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    @*<script src="~/Scripts/bootstrap.min.js"></script>*@
+
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+
+    <script src="~/Scripts/jquery-ui.js"></script>
+
+    <script src="~/Scripts/Custom.js"></script>
+
+    <style>
+        td, th {
+            border: 1px solid grey;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="site-wrapper">
+
+            <div class="site-wrapper-inner">
+
+                <div class="cover-container">
+
+                    <div class="masthead clearfix">
+                        <div class="inner">
+                            <a href="@Url.Action("Index", "Home")">
+                                <h3 class="masthead-brand" style="margin-left: -15px;margin-top: 5px; padding: 4px; background-color: rgb(55, 55, 55); border:1px solid white;">H & J</h3>
+                            </a>
+
+                            <ul class="nav masthead-nav">
+                                <li id="lnkHome" class="active"><a href="@Url.Action( "Index","Home")">Home</a></li>
+
+                                <li id="lnkMovie">
+                                    <a href="@Url.Action( "Index","Movie")">Movies</a>
+                                </li>
+
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li id="lnkBooking"><a href="@Url.Action( "Index","Booking")">Bookings</a></li>
+                                }
+
+                                @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                                {
+                                    <li id="lnkAmenity"><a href="@Url.Action("Index", "Amenity")">Amenities</a></li>
+                                    <li id="lnkGenre"><a href="@Url.Action("Index", "Genre")">Genres</a></li>
+                                }
+
+                                <li id="lnkCinema"><a href="@Url.Action("Index", "Cinema")">Cinemas</a></li>
+
+                                <li>
+                                    @using (Html.BeginForm("Search", "Movie", FormMethod.Get, new { @autocomplete = "off", enctype = "multipart/form-data", @class = "navbar-form", role = "form", style = "width: 150px;" }))
+                                    {
+                                        <input id="keyword" name="keyword" type="text" class="form-control" placeholder="Search...">
+                                    }
+                                </li>
+
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <li><a href="@Url.Action("Logout", "Account")">Logout</a></li>
+                                    <li>@User.Identity.Name</li>
+                                }
+                                else
+                                {
+                                    <li id="lnkLogin"><a href="@Url.Action("Login", "Account")">Login</a></li>
+                                }
+                            </ul>
+                        </div>
+
+                        <br />
+
+                        <div class="container body-content">
+                            @RenderBody()
+                            <hr />
+                            <footer>
+                                <a href="#" onclick="backToTop()" class="back-to-top">Back to Top</a>
+                                <p>&copy; @DateTime.Now.Year - H&J Cinemas</p>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    $(document).ready(function () {
+        var pathName = window.location.pathname;
+
+        if (pathName.match("Amenity") != null) {
+            $(".nav li").removeClass("active");
+            $("#lnkAmenity").addClass("active");
+        }
+
+        if (pathName.match("Booking") != null) {
+            $(".nav li").removeClass("active");
+            $("#lnkBooking").addClass("active");
+        }
+
+        if (pathName.match("Cinema") != null) {
+            $(".nav li").removeClass("active");
+            $("#lnkCinema").addClass("active");
+        }
+
+        if (pathName.match("Genre") != null) {
+            $(".nav li").removeClass("active");
+            $("#lnkGenre").addClass("active");
+        }
+
+        if (pathName.match("Movie") != null) {
+            $(".nav li").removeClass("active");
+            $("#lnkMovie").addClass("active");
+        }
+
+        if (pathName.match("Account") != null) {
+            $(".nav li").removeClass("active");
+            $("#lnkLogin").addClass("active");
+        }
+    });
+
+</script>

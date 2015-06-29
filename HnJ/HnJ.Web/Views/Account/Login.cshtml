@@ -1,0 +1,43 @@
+﻿@model HnJ.Helper.Models.User
+@{
+    ViewBag.Title = "Login";
+}
+
+<style>
+    .masthead {
+        position: fixed;
+        top: 0;
+    }
+
+    .mastfoot {
+        position: fixed;
+        bottom: 0;
+    }
+</style>
+
+<div style="height:380px;">
+
+<div class="container body-content" style="margin-top:100px; width: 500px;" >
+    <h2>Login</h2>
+    <div class="content-wrapper">
+        <span class="label label-danger text-center block">@ViewData["loginMessage"]</span>
+        <div id="login-section" class="box-wrapper" style="background-color: #4C4C4C; height: 180px; padding: 15px;">
+            <div class="login-box">
+                <span class="label label-success">@TempData["success"]</span>
+
+                @using (Ajax.BeginForm("DoLogin", new AjaxOptions { }))
+                {
+                    <div class="form-group">
+                        <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary pull-right">Login</button>
+                }
+                <a href="~/Account/Register" class="btn btn-success pull-left">Register</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

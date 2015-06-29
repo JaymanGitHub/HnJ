@@ -1,0 +1,62 @@
+﻿@model IEnumerable<HnJ.Helper.Models.CheckboxViewModel>
+@{
+    ViewBag.Title = "Manage Genres";
+
+    var movie = (HnJ.Helper.Models.Movie)ViewBag.Movie;
+}
+
+<style>
+    td, th {
+        border: 1px solid grey;
+        padding: 10px;
+    }
+</style>
+
+<h2>Manage Genres</h2>
+
+<div style="margin-left:-15px; margin-right: -15px; margin-bottom:10px; margin-top:10px;">
+    <a href="@Url.Action("Create", new { @id = ViewBag.MovieId })" style="float:left;">
+        <button type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-chevron-left"></span> back
+        </button>
+    </a>
+</div>
+
+<br /><br /><br />
+
+@if (movie != null && movie.Id != Guid.Empty)
+{
+    <table style="width:100%; margin-top:10px;">
+
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>Genres</th>
+        </tr>
+
+        <tr>
+            <td>
+                <img style="width:180px" src="~/Content/Posters/@movie.PosterName" />
+            </td>
+            <td>@movie.Title</td>
+            <td>
+                @foreach (var amenity in movie.GenreMovies.Value)
+                {
+                    <label style="margin-right:10px;">@amenity.Genre.Value.Name</label>
+                }
+            </td>
+        </tr>
+    </table>
+
+    <br /><br />
+}
+
+@using (Html.BeginForm())
+{
+    @Html.Hidden("movieId", (Guid)ViewBag.MovieId)
+    @Html.EditorForModel()
+
+    <div class="form-group" style="margin-top:10px;">
+        <input type="submit" value="Save" class="btn btn-lg btn-default" />
+    </div>
+}

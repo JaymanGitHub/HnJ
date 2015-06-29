@@ -1,0 +1,162 @@
+﻿@model HnJ.Helper.Models.Movie
+
+@{
+    ViewBag.Title = "Movie";
+
+    var reviews = Model.Reviews.Value;
+
+    if (reviews.Any())
+    {
+        reviews = Model.Reviews.Value.OrderByDescending(x => x.DateCreated).ToList();
+    }
+}
+<br>
+<div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Description</h3>
+        </div>
+        <div class="panel-body" style="background-color: #333;">
+
+            <div class="col-lg-6" style="width: 657px;">
+
+                <img style="width:270px;  height: 255px; float: left;" src="~/Content/Posters/@Model.PosterName" />
+
+                <table style="width:350px;">
+                    <tr>
+                        <td>Movie Title:</td>
+                        <td>@Model.Title</td>
+
+                    </tr>
+                    <tr>
+                        <td>Main Actors:</td>
+                        <td>@Model.Directors</td>
+
+                    </tr>
+                    <tr>
+                        <td>Directors:</td>
+                        <td>@Model.Directors</td>
+
+                    </tr>
+                    <tr>
+                        <td>Genres:</td>
+                        @if (Model.GenreMovies != null && Model.GenreMovies.Value != null && Model.GenreMovies.Value.Any())
+                        {
+                            <td>
+                                @foreach (var genre in Model.GenreMovies.Value)
+                                {
+                                    <label style="margin-right:10px;">@genre.Genre.Value.Name</label>
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td> No genre chose</td>
+                        }
+
+                    </tr>
+
+                    <tr>
+                        <td>Release Date:</td>
+                        <td>@Model.ReleaseDate</td>
+
+                    </tr>
+                    <tr>
+                        <td>Showing Type:</td>
+                        <td>
+                            @if (@Model.ReleaseDate > DateTime.Now)
+                            {
+                                <p style="margin:0;">Coming soon</p>
+                            }
+                            else
+                            {
+                                <p style="margin:0;">Now showing</p>
+                            }
+                        </td>
+
+                    </tr>
+
+                </table>
+            </div>
+
+            <div class="form-group col-lg-6" style="width:253px;">
+                @if (!User.IsInRole("Admin"))
+                {
+                    using (Html.BeginForm("Booking", "Movie", FormMethod.Post))
+                    {
+                        <div class="form-group">
+                            @Html.Label("Cinema")
+                            @Html.DropDownList("CinemaId", new SelectList(HnJ.Helper.Cinemas.GetAll(), "Id", "Name"), new { @class = "form-control", style = "width: 240px; height:30px;" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label("Date")
+                            @Html.TextBox("BookingDate", DateTime.Now.ToString("dd/MM/yyyy"), new { @id = "datepicker", @class = "form-control datepicker", @placeholder = "Select booking date", @style = "width:198px;" })
+                        </div>
+
+                        @Html.Hidden("movieId", Model.Id)
+
+
+                        <input type="submit" name="submit" value="Book" class="btn btn-success">
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <br>
+    <div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Reviews</h3>
+            </div>
+            <div class="panel-body" style="background-color: #333; min-height:250px;">
+
+                <div class="form-group">
+
+                    @using (Html.BeginForm("AddReview", "Movie", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="form-group">
+                            @Html.TextArea("comment", new { rows = 5, style = "width: 100%", @class = "form-control", @placeholder = "Write your comments here..." })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.DropDownList("rating", new SelectList(new List<Object>{
+                               new { value = 1 , text = "1"  },
+                               new { value = 2 , text = "2" },
+                               new { value = 3 , text = "3"},
+                               new { value = 4 , text = "4"},
+                               new { value = 5 , text = "5"}
+                            }, "value", "text"), new { style = "width: 240px; height:35px; float:left; margin-right:10px;", @class = "form-control" })
+                        </div>
+                        @Html.Hidden("movieId", Model.Id)
+
+                        <input type="submit" name="submit" class="btn btn-primary" value="Leave comment" />
+                    }
+                    <hr />
+                </div>
+
+                <div class="form-group">
+                    @foreach (var review in Model.Reviews.Value)
+                    {
+                        <span style="width:100%;">@review.Comment</span>
+                        <br />
+                        <sub>Rating:@review.Rating </sub>
+                        <sub><b>@(String.IsNullOrEmpty(review.User.Value.Username) ? " - Anonymous" : " - " + review.User.Value.Username)</b></sub>
+                        <br />
+
+                        <hr style="color:gray; border-color:gray; " />
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+
+    $('.datepicker').datepicker({
+        dateFormat: 'dd/mm/yy'
+    });
+    $('[name=rating]').val(5);
+
+</script>

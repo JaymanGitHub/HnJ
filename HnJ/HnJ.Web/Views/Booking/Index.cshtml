@@ -1,0 +1,57 @@
+﻿@model List<HnJ.Helper.Models.Booking>
+@{
+    ViewBag.Title = "Bookings";
+}
+
+<hr/>
+<h2>Bookings</h2>
+@if(!User.IsInRole("Admin"))
+{ 
+<a href='@Url.Action("Manage")'>
+    <button type="button" class="btn btn-primary btn-default">
+        <span class="glyphicon glyphicon-plus"></span> Add
+    </button>
+</a>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning" role="alert" style="margin-top:10px;">
+        Empty.
+    </div>
+}
+else
+{
+    <table class="table table-bordered" style="width:100%; margin-top:10px;">
+
+        <tr>
+            <th>User</th>
+            <th></th>
+            <th>Movie</th>
+            <th>Cinema</th>
+            <th>Price</th>
+            <th>Date</th>
+            <th></th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="vertical-align:middle">@item.User.Value.Name</td>
+                <td style="vertical-align:middle"><img src="~/Content/Posters/@item.Movie.Value.PosterName" style="width: 150px;" /></td>
+                <td style="vertical-align:middle">@item.Movie.Value.Title</td>
+                <td style="vertical-align:middle">@item.Cinema.Value.Name</td>
+                <td style="vertical-align:middle">@item.Price.ToString("C")</td>
+                <td style="vertical-align:middle">@item.BookingDate.ToString("dd/MM/yyyy")</td>
+                <td style="vertical-align:middle">
+                    @Html.ActionLink(" ", "Manage", new { @id = item.Id }, new { @class = "btn btn-success glyphicon glyphicon-pencil" })
+                </td>
+                <td style="vertical-align:middle">
+                    @Html.ActionLink(" ", "Delete", new { @id = item.Id }, new { @class = "btn btn-danger glyphicon glyphicon-trash", @onclick = "return confirm('Are you sure you want to delete this booking?');" })
+                </td>
+            </tr>
+        }
+
+    </table>
+}
